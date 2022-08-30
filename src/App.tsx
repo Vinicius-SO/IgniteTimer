@@ -1,9 +1,9 @@
-import React from 'react'
+import { GlobalStyles } from './styles/global'
+import { defaultTheme } from './styles/theme/default'
 
 import { ThemeProvider } from 'styled-components'
 
 import { Button } from './components/Button'
-import { defaultTheme } from './styles/theme/default'
 
 export function App() {
     return (
@@ -13,6 +13,8 @@ export function App() {
             <Button variant='secondary' />
             <Button />
             <Button />
+
+            <GlobalStyles/>
           </ThemeProvider>
       </>
     )
