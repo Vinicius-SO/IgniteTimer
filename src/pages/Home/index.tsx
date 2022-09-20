@@ -8,23 +8,29 @@ import { useForm } from 'react-hook-form'
 
 const newCycleFormValidationSchema = z.object({
     task: z.string().min(1,'Informe a tarefa'),
-    minutesAmount: z.number().min(5, 'O valor minimo de um cilo é de 5 minutos').max(60, 'O valor maximo de um cilo é de 60 minutos')
+    minutesAmount: z.number()
+    .min(5, 'O valor minimo de um cilo é de 5 minutos')
+    .max(60, 'O valor maximo de um cilo é de 60 minutos')
 })
+
+type newCycleFormData = z.infer<typeof newCycleFormValidationSchema>
 
 export function Home(){
 
-    const {register, handleSubmit, watch, formState} = useForm({
+    const {register, handleSubmit, watch} = useForm<newCycleFormData>({
         resolver: zodResolver(newCycleFormValidationSchema),
+        defaultValues: {
+            task: '',
+            minutesAmount: 0
+        }
     })
 
     const task = watch('task')
     const isSubmitDisabled = !task
 
-    function handleCreateNewCicle(data:any){
+    function handleCreateNewCicle(data:newCycleFormData){
         console.log(data)
     }
-
-    console.log(formState.errors)
    
     return(
         <HomeContainer>
