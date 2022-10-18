@@ -13,7 +13,7 @@ import { useForm } from 'react-hook-form'
 const newCycleFormValidationSchema = z.object({
     task: z.string().min(1,'Informe a tarefa'),
     minutesAmount: z.number()
-    .min(5, 'O valor minimo de um cilo é de 5 minutos')
+    .min(1, 'O valor minimo de um cilo é de 5 minutos')
     .max(60, 'O valor maximo de um cilo é de 60 minutos')
 })
 
@@ -24,7 +24,8 @@ interface Cycle {
     task: string;
     minutesAmount: number;
     startDate: Date;
-    interruptedDate?: Date
+    interruptedDate?: Date,
+    finishedDate?: Date
 }
 
 export function Home(){
@@ -40,26 +41,50 @@ export function Home(){
             minutesAmount: 0
         }
     })
+
     
     const activeCycle = cycles.find( cycle => cycle.id === activeCycleId )
+    const totalSeconds = activeCycle ? activeCycle.minutesAmount * 60 : 8 
 
     useEffect(()=>{
 
         let interval: any
         if(activeCycle){
             interval = setInterval(() => {
-                setAmountSecondsPassed(differenceInSeconds(new Date(), activeCycle.startDate))
+
+                const secondsDifference = differenceInSeconds(
+                    new Date(), 
+                    activeCycle.startDate
+                )
+
+                if(secondsDifference >= totalSeconds){
+                    setCycles(state => state.map(cycle=>{
+                        if (cycle.id === activeCycleId){
+                            return { ...cycle, finishedDate: new Date()}
+                        }else{
+                            return cycle
+                        }
+                    }),
+                    )
+
+                    setAmountSecondsPassed(totalSeconds)
+
+                    clearInterval(interval)
+                }
+                else{
+                    setAmountSecondsPassed(secondsDifference)
+                }
             }, 1000)
         }
 
         return () => {
             clearInterval(interval)
         }
-    },[activeCycle])
+    },[activeCycle, activeCycleId])
 
     
     function handleInterruptCycle (){
-        setCycles(cycles.map(cycle=>{
+        setCycles(state => state.map(cycle=>{
             if (cycle.id === activeCycleId){
                 return { ...cycle, interruptedDate: new Date()}
             }else{
@@ -71,7 +96,6 @@ export function Home(){
         setActiveCycleId(null)
     }
 
-    const totalSeconds = activeCycle ? activeCycle.minutesAmount * 60 : 8 
     const currentSeconds = activeCycle ? totalSeconds - amountSecondsPassed : 0
 
     const minutesAmount = Math.floor(currentSeconds / 60) 
@@ -134,7 +158,7 @@ export function Home(){
                      placeholder="00"
                      type="number"
                      id="minutesAmount"
-                     step={5}             
+                     step={1}             
                      disabled={!!activeCycle}
                     //  min={5}
                     //  max={60}
