@@ -27,6 +27,7 @@ export function NewCycleForm({activeCycle}:any){
         }
     })
     
+    
     return(
         <FormContainer>
             <label htmlFor="task">Vou trabalhar em</label>
