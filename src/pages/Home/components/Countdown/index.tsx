@@ -6,13 +6,9 @@ import { differenceInSeconds } from 'date-fns'
 
 export function Countdown(){
 
-    const { activeCycle, markCurrentCycleAsFinished, activeCycleId } = useContext(CycleContext)
+    const { activeCycle, markCurrentCycleAsFinished, activeCycleId, amountSecondsPassed,setSecondsPassed } = useContext(CycleContext)
     
     const totalSeconds = activeCycle ? activeCycle.minutesAmount * 60 : 8 
-
-    const [amountSecondsPassed, setAmountSecondsPassed] = useState(0)
-
-
 
     useEffect(()=>{
 
@@ -27,22 +23,13 @@ export function Countdown(){
                 )
 
                 if(secondsDifference >= totalSeconds){
-                    // setCycles(state => state.map(cycle=>{
-                    //     if (cycle.id === activeCycleId){
-                    //         return { ...cycle, finishedDate: new Date()}
-                    //     }else{
-                    //         return cycle
-                    //     }
-                    // }),
-                    // )
                     markCurrentCycleAsFinished()
-
-                    setAmountSecondsPassed(totalSeconds)
+                    setSecondsPassed(totalSeconds)
 
                     clearInterval(interval)
                 }
                 else{
-                    setAmountSecondsPassed(secondsDifference)
+                    setSecondsPassed(secondsDifference)
                 }
             }, 1000)
         }
@@ -50,7 +37,7 @@ export function Countdown(){
         return () => {
             clearInterval(interval)
         }
-    },[activeCycle, activeCycleId, markCurrentCycleAsFinished])
+    },[activeCycle, activeCycleId, markCurrentCycleAsFinished, setSecondsPassed])
 
 
     const currentSeconds = activeCycle ? totalSeconds - amountSecondsPassed : 0
