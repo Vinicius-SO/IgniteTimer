@@ -71,7 +71,6 @@ export function CycleContextProvider ({children}: CycleContextProviderProps){
         setActiveCycleId(id)
         setAmountSecondsPassed(0)
 
-        // reset()
     }
     return(
         <CycleContext.Provider value={{ cycles,activeCycle, activeCycleId, markCurrentCycleAsFinished, amountSecondsPassed, setSecondsPassed, interruptCurrentCycle, createNewCycle }}>
