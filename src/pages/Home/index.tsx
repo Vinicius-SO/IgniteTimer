@@ -13,14 +13,6 @@ import { NewCycleForm } from './components/NewCycleForm';
 import { Countdown } from './components/Countdown';
 import { CycleContext } from '../../context/CycleContext';
 
-export interface Cycle {
-    id: string;
-    task: string;
-    minutesAmount: number;
-    startDate: Date;
-    interruptedDate?: Date,
-    finishedDate?: Date
-}
 
 type newCycleFormData = z.infer<typeof newCycleFormValidationSchema>
 
